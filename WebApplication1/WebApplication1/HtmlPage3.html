@@ -1,0 +1,264 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="jquery-1.9.1.min.js"></script>
+    <script src="jquery-ui.js"></script>
+    <link href="jquery-ui.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <style>
+        .title {
+            font-size: 40px;
+            background-color:green;
+        }
+        .yellow {
+            background-color:seagreen;
+        }
+
+        .tab {
+            /*background-color: cyan;*/
+            background-color: green;
+            text-align:center;
+        }
+        .td0 {
+            border: thin ridge green;
+            color:darkgreen;
+        }
+
+        .ui-progressbar {
+            position: relative;
+        }
+        .input click {
+            background-color: green;
+        }
+        .progress-label {
+            position: absolute;
+            left: 50%;
+            top: 4px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 #fff;
+        }
+
+        #targil {
+            background-color:mediumseagreen;
+            /*width: 100px;
+            height: 10px;*/
+        }
+    </style>
+    <script>
+        $(function () {
+            var tbl = $("<table></table >");
+            for (i = 0; i <= 10; i++) {
+                var tr = $("<tr></tr> ").attr("id", i)
+                for (var j = 0; j <= 10; j++) {
+                    var t = $("<td></td>").attr("data-r", i).attr("data-c", j);
+                    if (i * j == 0) {
+                        t.text(i + j);
+                        t.addClass("td0");
+                        
+                    }
+                    else
+                        t.text(i * j);
+                    tr.append(t);
+                }
+                tbl.addClass("col-sm-6");
+                tbl.append(tr);
+            }  
+            $("#bod").append(tbl);
+
+            $(function () {
+                $("#tabs").tabs({
+                    collapsible: true
+                });
+            });
+
+            $("#tab2").click(function () {
+                clearInterval(t);
+                $("td[style='background-color: gold']").removeClass("yellow");
+            });
+
+            var t;
+            $("input[type='radio']").checkboxradio({ icon: false }).click(function clicked(cef) {//i have to get the cef?
+
+                clearInterval(t);
+                var cef = 1;
+                var clicked = $(this).val();
+                t = setInterval(function () {
+                    var one = setTimeout(function () { $("td[data-r='" + clicked + "'][data-c=0]").addClass("yellow") }, 0);
+                    var two = setTimeout(function () { $("td[data-r='" + clicked + "'][data-c=0]").removeClass("yellow") }
+                        , 1000);
+                    var two = setTimeout(function () { $("td[data-r=0][data-c='" + (cef) + "']").addClass("yellow") }
+                        , 1000);
+                    var three = setTimeout(function () { $("td[data-r=0][data-c='" + (cef) + "']").removeClass("yellow") }
+                        , 2000); var three = setTimeout(function () { $("td[data-r='" + clicked + "'][data-c='" + (cef) + "']").addClass("yellow") }
+                            , 2000);
+                    var three = setTimeout(function () { $("td[data-r='" + clicked + "'][data-c='" + (cef++) + "']").removeClass("yellow") }
+                        , 3000);
+                    if (cef == 11)
+                        clearInterval(t);
+                }, 3000);
+            });
+
+            var x, y, xy;
+
+            $("#practice").click(function () {
+                clearInterval(t); flag = 0;
+                $("td[style='background-color: gold']").removeClass("yellow");
+                x = Math.floor((Math.random() * 10) + 1);
+                y = Math.floor((Math.random() * 10) + 1);
+                xy = x * y;
+                $("#targil").text(x + " * " + y + "=?");
+
+                var flag, val, val2=0;
+                //= 1
+                var progressbar = $("#progressbar"),
+                    progressLabel = $(".progress-label");
+                //if (!flag) {
+                progressbar.progressbar({
+                    value: false,
+                    change: function () {
+                        progressLabel.text(progressbar.progressbar("value") + "%");
+                    },
+                    complete: function () {
+                        progressLabel.text("Complete!");
+                    }
+                });
+                function progress() {
+                    val = progressbar.progressbar("value") || val2;
+                    progressbar.progressbar("value", val + 2);
+
+                    if (val < 99) {
+                        if (!flag) {
+                            setTimeout(progress, 500);
+                        }
+                    }
+                    else {
+                        $("#dialog-didnt-clicked").dialog({
+                            resizable: false,
+                            height: "auto",
+                            width: 400,
+                            modal: true,
+                            buttons: {
+                                "To-see-the-correct-answer": function () {
+                                    flag = 1;
+                                    $(this).dialog("close");
+                                    $("#targil").text(x + " * " + y + "=" + xy);
+                                },
+                                "To-learn-it-again": function () {
+                                    flag = 1;
+                                    $(this).dialog("close");
+                                    $("input").val(x).trigger("click");
+                                    $("#tab1").trigger("click");
+                                }
+                            }
+                        });
+                    }
+                }
+                setTimeout(progress, 2000);
+
+
+                $("td").click(function () {
+                    flag = 1;
+                    if ($(this).text() == xy) {
+                        value = 100;
+                        $(function () {
+                            $("#dialog-message").dialog({
+                                modal: true,
+                                buttons: {
+                                    Continue: function () {
+                                        flag = 1;
+                                        $(this).dialog("close");
+                                        $("#practice").trigger("click");
+                                    }
+                                }
+                            });
+                        });
+                    }
+                    else {
+                        val2 = val;
+                        
+                        $("#dialog-confirm").dialog({
+                            resizable: false,
+                            height: "auto",
+                            width: 400,
+                            modal: true,
+                            buttons: {
+                                "To try again": function () {
+                                    $(this).dialog("close");
+                                    val = val2;
+                                    flag = 0;
+                                },
+                                Cancel: function () {
+                                    $(this).dialog("close");
+                                    //$("#progressbar").clearQueue();
+                                    flag = 0;
+                                    value = 100;
+                                },
+                            }
+                        });
+                    };
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1 class="title">multiplication table</h1>
+    <div id="bod" class="row">
+        <div id="tabs" class="col-sm-6">
+            <ul>
+                <li><a href="#tabs-1" id="tab1"class="tab">Learn it</a></li>
+                <li><a href="#tabs-2" id="tab2" class="tab">Practice</a></li>
+            </ul>
+            <div id="tabs-1">
+                <div class="widget">
+                    <fieldset>
+                        <legend>Choose the number: </legend>
+                        <label for="radio-1">1</label>
+                        <input type="radio" name="radio-1" id="radio-1" value="1" class="input">
+                        <label for="radio-2">2</label>                            
+                        <input type="radio" name="radio-1" id="radio-2" value="2" class="input">
+                        <label for="radio-3">3</label>                            
+                        <input type="radio" name="radio-1" id="radio-3" value="3" class="input">
+                        <label for="radio-4">4</label>                            
+                        <input type="radio" name="radio-1" id="radio-4" value="4" class="input">
+                        <label for="radio-5">5</label>                            
+                        <input type="radio" name="radio-1" id="radio-5" value="5" class="input">
+                        <label for="radio-6">6</label>                            
+                        <input type="radio" name="radio-1" id="radio-6" value="6" class="input">
+                        <label for="radio-7">7</label>                            
+                        <input type="radio" name="radio-1" id="radio-7" value="7" class="input">
+                        <label for="radio-8">8</label>                            
+                        <input type="radio" name="radio-1" id="radio-8" value="8" class="input">
+                        <label for="radio-9">9</label>                            
+                        <input type="radio" name="radio-1" id="radio-9" value="9" class="input">
+                        <label for="radio-10">10</label>                          
+                        <input type="radio" name="radio-1" id="radio-10" value="10" class="input">
+                    </fieldset>
+                </div>
+            </div>
+            <div id="tabs-2">
+                <div>
+                    <button id="practice">Please click to get a new tar</button><br />
+                    <label id="targil" text=" "></label>
+                    <div id="progressbar"><div class="progress-label" text="Loading..."></div></div>
+                    <div id="dialog-message" title="Very good!!">
+                    </div>
+                    <div id="dialog-confirm" title="It's a wrong. Try again.">
+                    </div>
+                    <div id="dialog-didnt-clicked" title="What do you want to do?">
+                        <p class="dis" id="time">
+                    </div>
+                    <div class="targil" text="your points: "></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+ 

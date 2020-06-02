@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="jquery-1.9.1.min.js"></script>
+    <style>
+        body{
+            text-align:center;
+            background-color:gainsboro;
+        }
+        .title {
+            font-size: 40px;
+            background-color:green;
+            text-align:center;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $("#enter").click(function () {
+                $.getJSON("/json.json", function (data, status) {
+                    $.each(data, function (i, field) {
+                        if ($("#btnname").text = field.name)    
+                        {
+                                $.getJSON("/json.json", function (data, status) {
+                                    $.each(data, function (i, field) {
+                                        if ($("#btncode").text = field.code)   
+                                            //$("a").trigger("click");
+                                            location.href = "HtmlPage3.html";
+                                    });
+                                }).fail(
+                                    function (err, status) {
+                                        $("#result").text("One or more of the inputs are'nt correct.");
+                                        $("#btncode").text(" ");
+                                        $("#btnname").text(" ");
+                                    });
+                        }
+                    });
+                });
+
+            });
+        });
+    </script>
+    
+</head>
+<body>
+    <h1 class="title">multiplication table</h1>
+    your name: <input type="text" autofocus id="btnname" /><br />
+    your code: <input type="password" id="btncode" /><br />
+    entering: <input type="button" id="enter" />
+    <div id="result"></div>
+    <a href="HtmlPage1.html" style="display:none">HtmlPage3.html</a>
+</body>
+</html>
